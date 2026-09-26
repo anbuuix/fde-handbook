@@ -210,6 +210,8 @@ details.q .qa p:last-child{margin-bottom:0}
 .complete-bar p{margin:0; color:var(--ink-2); font-size:15px}
 
 /* home & roles */
+.byline{display:inline-flex; align-items:center; gap:8px; margin:-4px 0 18px; padding:6px 12px; border:1px solid var(--line); border-radius:999px; font-size:14.5px; color:var(--ink-2)}
+.byline b{color:var(--ink)}
 .hero-eyebrow{font:600 12.5px var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin:0 0 12px}
 .start-steps{list-style:none; padding:0; margin:0 0 18px; display:grid; gap:12px; counter-reset:s}
 .start-steps li{display:grid; grid-template-columns:40px minmax(0,1fr); gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:0}
@@ -412,6 +414,7 @@ function home(){
   const content = `
     <p class="hero-eyebrow">A free handbook · India 2026</p>
     <h1>Forward Deployed Handbook</h1>
+    <p class="byline">Made for you by <b>Anbuuu</b></p>
     <p class="lede">Everything you need to go from beginner to a job-ready engineer in India, and then on to becoming a Forward Deployed Engineer. Every topic is taught here in detail, with examples, videos and practice tasks. Outside links are only for going further.</p>
     ${lastLabel?`<p><a class="btn primary" href="${esc(last)}">Continue where you left off: ${esc(lastLabel)} →</a></p>`:''}
     ${MOD.zero && !lastLabel?`<div class="beginner"><div><b>Never written code before? Start here.</b><p>The first module, <strong>Start from zero</strong>, explains what code is, files and folders, the terminal, how websites work and how to read the examples in this handbook. Everything else builds on it. Any word you don’t know is in the <a href="#glossary">Glossary</a>.</p><a class="btn primary" href="#mod-zero">Start from zero →</a></div></div>`:''}
