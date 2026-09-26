@@ -302,6 +302,8 @@ const ROLE_SHORT = {fde:'FDE', fs:'Full Stack', be:'Backend', ai:'AI Engineer', 
 const GC = g => `var(--g-${g})`;
 const RC = r => `var(--r-${r})`;
 const ARTIFACT = !!(window.claude && typeof window.claude.use === 'function') || /claude/i.test(location.hostname);
+const LOCALFILE = location.protocol === 'file:';
+const ltitle = t => String(t||'').replace(/^\d+\.\s*/, '');
 
 const MOD = {}; MODULES.forEach(m => { MOD[m.id] = m; });
 const mods = ORDER.filter(id => MOD[id]).map(id => MOD[id]);
@@ -343,7 +345,7 @@ function videoHTML(v){
   if(!v || !v.id) return '';
   const url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
   const mins = v.mins ? ` · about ${esc(v.mins)} min` : '';
-  if(ARTIFACT){
+  if(ARTIFACT || LOCALFILE){
     return `<a class="vcard" href="${url}" target="_blank" rel="noopener"><span class="vplay" aria-hidden="true"></span><span><b>${esc(v.title)}</b><small>${esc(v.channel||'')}${mins} · opens YouTube</small></span></a>`;
   }
   return `<figure class="video"><div class="vbox"><button type="button" class="vposter" data-vid="${esc(v.id)}" aria-label="Play video: ${esc(v.title)}" style="background-image:url('https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg')"><span class="vplay" aria-hidden="true"></span></button></div><figcaption><b>${esc(v.title)}</b> · ${esc(v.channel||'')}${mins} · <a href="${url}" target="_blank" rel="noopener">Watch on YouTube</a></figcaption></figure>`;
@@ -574,7 +576,7 @@ function modPage(m){
   const g = GROUPS.find(x => x.id === m.group);
   const ub = usedBy(m.id);
   const tc = taskCount(m), td = tasksDone(m);
-  const lessons = (m.lessons||[]).map((l,i) => `<h2 id="l-${i}" style="--c:${c}"><span class="eyebrow">Lesson ${i+1}</span>${esc(l.title)}</h2>${(l.blocks||[]).map(block).join('')}`).join('');
+  const lessons = (m.lessons||[]).map((l,i) => `<h2 id="l-${i}" style="--c:${c}"><span class="eyebrow">Lesson ${i+1}</span>${esc(ltitle(l.title))}</h2>${(l.blocks||[]).map(block).join('')}`).join('');
   const tasks = (m.tasks||[]).map((t,i) => {
     const k = m.id+':'+i, on = !!state.tasks[k];
     const codeSol = t.lang && !/^(text|markdown|md|none|plain|outline)$/i.test(t.lang);
@@ -613,7 +615,7 @@ function modPage(m){
     <div class="two"><div><h3 style="margin-top:0">Main sources</h3>${linksHTML(m.sources)}</div><div><h3 style="margin-top:0">Go deeper</h3>${linksHTML(m.advanced)}</div></div>
     <div class="complete-bar"><p>${state.done[m.id]?'You marked this module as complete.':'Finished the lessons, tasks and mini project?'}</p><button type="button" class="btn ${state.done[m.id]?'done':'primary'}" data-complete="${m.id}">${state.done[m.id]?'✓ Completed':'Mark module complete'}</button></div>
     <div class="pager">${pagerMod(m)}</div>`;
-  const toc = (m.lessons||[]).map((l,i) => ['l-'+i, (i+1)+'. '+l.title]);
+  const toc = (m.lessons||[]).map((l,i) => ['l-'+i, (i+1)+'. '+ltitle(l.title)]);
   toc.push(['s-tasks','Tasks']); if(pr) toc.push(['s-project','Mini project']); if((m.quiz||[]).length) toc.push(['s-quiz','Check yourself']); toc.push(['s-links','Sources']);
   return {title:m.title, html:`<div class="page"><div class="content">${content}</div>${tocHTML(toc)}</div>`};
 }
